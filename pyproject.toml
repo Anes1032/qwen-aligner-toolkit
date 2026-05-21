@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "qwen-aligner-toolkit"
-version = "0.1.0"
+version = "0.1.1"
 description = "Production toolkit around Qwen3-ForcedAligner: VAD pre-segmentation, multi-language word/char-level alignment, and speaker diarization."
 readme = "README.md"
 requires-python = ">=3.10"
