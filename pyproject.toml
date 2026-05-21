@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qwen-aligner-toolkit"
+version = "0.1.0"
+description = "Production toolkit around Qwen3-ForcedAligner: VAD pre-segmentation, multi-language word/char-level alignment, and speaker diarization."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [
+    { name = "qwen-aligner-toolkit contributors" },
+]
+keywords = ["asr", "alignment", "diarization", "vad", "qwen", "whisper", "speech"]
+classifiers = [
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Sound/Audio :: Speech",
+]
+dependencies = [
+    "torch>=2.0",
+    "numpy>=1.24",
+    "soundfile>=0.12",
+    "soxr>=0.3",
+    "qwen-asr>=0.0.6",
+]
+
+[project.optional-dependencies]
+diarization = [
+    "pyannote.audio>=4.0",
+]
+full = [
+    "pyannote.audio>=4.0",
+]
+dev = [
+    "pytest>=7",
+    "pytest-cov>=4",
+    "ruff>=0.5",
+]
+
+[project.scripts]
+qwen-aligner-toolkit = "qwen_aligner_toolkit.cli:main"
+
+[project.urls]
+Repository = "https://github.com/your-org/qwen-aligner-toolkit"
+Issues = "https://github.com/your-org/qwen-aligner-toolkit/issues"
+
+[tool.setuptools.packages.find]
+include = ["qwen_aligner_toolkit*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP", "B"]
