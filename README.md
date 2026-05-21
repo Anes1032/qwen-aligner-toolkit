@@ -38,7 +38,7 @@ from qwen_aligner_toolkit import Aligner
 aligner = Aligner.from_pretrained()
 words = aligner.align(
     text="甚至出现交易几乎停滞的情况。",
-    audio="audio.wav",
+    audio="https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen3-ASR-Repo/asr_zh.wav",
     language="Chinese",
 )
 for w in words:
