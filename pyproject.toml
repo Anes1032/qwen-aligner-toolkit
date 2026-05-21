@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "Apache-2.0" }
 authors = [
-    { name = "qwen-aligner-toolkit contributors" },
+    { name = "Anes1032" },
 ]
 keywords = ["asr", "alignment", "diarization", "vad", "qwen", "whisper", "speech"]
 classifiers = [
@@ -46,15 +46,17 @@ dev = [
 qwen-aligner-toolkit = "qwen_aligner_toolkit.cli:main"
 
 [project.urls]
-Repository = "https://github.com/your-org/qwen-aligner-toolkit"
-Issues = "https://github.com/your-org/qwen-aligner-toolkit/issues"
+Repository = "https://github.com/Anes1032/qwen-aligner-toolkit"
+Issues = "https://github.com/Anes1032/qwen-aligner-toolkit/issues"
+Homepage = "https://github.com/Anes1032/qwen-aligner-toolkit"
 
 [tool.setuptools.packages.find]
 include = ["qwen_aligner_toolkit*"]
 
 [tool.ruff]
-line-length = 100
+line-length = 120
 target-version = "py310"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "W", "UP", "B"]
+ignore = ["B009"]

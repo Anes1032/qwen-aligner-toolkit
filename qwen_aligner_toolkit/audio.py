@@ -1,16 +1,17 @@
+from __future__ import annotations
+
 import io
 from pathlib import Path
-from typing import Union
 
 import numpy as np
 import torch
 
-AudioInput = Union[str, Path, bytes, np.ndarray, torch.Tensor, tuple]
+AudioInput = str | Path | bytes | np.ndarray | torch.Tensor | tuple
 
 TARGET_SAMPLE_RATE = 16000
 
 
-def resolve_device(device: Union[str, torch.device, None]) -> torch.device:
+def resolve_device(device: str | torch.device | None) -> torch.device:
     if device is None:
         return torch.device("cuda" if torch.cuda.is_available() else "cpu")
     return torch.device(device)

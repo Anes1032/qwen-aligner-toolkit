@@ -4,7 +4,6 @@ import logging
 import threading
 from dataclasses import dataclass
 
-import numpy as np
 import torch
 
 from .aligner import Word
@@ -188,8 +187,12 @@ def _smooth_speaker_runs(words: list[Word], min_duration_sec: float) -> list[Wor
                 break
         if idx is None:
             break
-        prev_dur = (groups[idx - 1]["end"] - groups[idx - 1]["start"]) if idx > 0 and groups[idx - 1]["speaker"] is not None else -1.0
-        next_dur = (groups[idx + 1]["end"] - groups[idx + 1]["start"]) if idx < len(groups) - 1 and groups[idx + 1]["speaker"] is not None else -1.0
+        prev_dur = -1.0
+        if idx > 0 and groups[idx - 1]["speaker"] is not None:
+            prev_dur = groups[idx - 1]["end"] - groups[idx - 1]["start"]
+        next_dur = -1.0
+        if idx < len(groups) - 1 and groups[idx + 1]["speaker"] is not None:
+            next_dur = groups[idx + 1]["end"] - groups[idx + 1]["start"]
         _merge_into(idx, -1 if prev_dur >= next_dur else 1)
 
     while len(groups) > 1:
