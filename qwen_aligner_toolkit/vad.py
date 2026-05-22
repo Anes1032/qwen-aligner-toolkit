@@ -36,6 +36,28 @@ class VAD:
             model = model.to(device_obj)
         return cls(model=model, device=device_obj)
 
+    @classmethod
+    def from_segmentation_model(
+        cls,
+        model,
+        device: str | torch.device | None = None,
+    ) -> VAD:
+        """Construct a VAD around an already-loaded pyannote segmentation Model.
+
+        Useful for sharing the segmentation submodel with a Diarizer
+        (see Diarizer.segmentation_model). The model is not moved; pass
+        device only to record bookkeeping. If device is None, the model's
+        current device is used.
+        """
+        if device is None:
+            try:
+                device_obj = next(model.parameters()).device
+            except StopIteration:
+                device_obj = torch.device("cpu")
+        else:
+            device_obj = torch.device(device)
+        return cls(model=model, device=device_obj)
+
     def detect(
         self,
         audio: AudioInput,
