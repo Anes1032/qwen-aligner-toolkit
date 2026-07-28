@@ -8,6 +8,7 @@ import torch
 
 from .aligner import Word
 from .audio import AudioInput, load_audio, resolve_device
+from .hub import load_from_cache_or_hub
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +38,10 @@ class Diarizer:
     ) -> Diarizer:
         from pyannote.audio import Pipeline
         device_obj = resolve_device(device)
-        pipeline = Pipeline.from_pretrained(model_id, token=hf_token)
+        pipeline = load_from_cache_or_hub(
+            lambda: Pipeline.from_pretrained(model_id, token=hf_token),
+            f"pyannote pipeline {model_id}",
+        )
         if device_obj.type == "cuda" and torch.cuda.is_available():
             pipeline.to(device_obj)
         return cls(pipeline=pipeline, device=device_obj)

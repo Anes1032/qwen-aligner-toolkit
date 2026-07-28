@@ -7,6 +7,7 @@ import numpy as np
 import torch
 
 from .audio import AudioInput, load_audio, resolve_device, slice_audio
+from .hub import load_from_cache_or_hub
 
 logger = logging.getLogger(__name__)
 
@@ -82,11 +83,14 @@ class Aligner:
         resolved_dtype = dtype if dtype is not None else (
             torch.bfloat16 if device.type == "cuda" else torch.float32
         )
-        model = Qwen3ForcedAligner.from_pretrained(
-            model_id,
-            dtype=resolved_dtype,
-            device_map=resolved_map,
-            **kwargs,
+        model = load_from_cache_or_hub(
+            lambda: Qwen3ForcedAligner.from_pretrained(
+                model_id,
+                dtype=resolved_dtype,
+                device_map=resolved_map,
+                **kwargs,
+            ),
+            f"Qwen3ForcedAligner {model_id}",
         )
         logger.info(f"Loaded Qwen3ForcedAligner: {model_id} on {resolved_map} ({resolved_dtype})")
         return cls(model=model)
