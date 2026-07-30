@@ -26,6 +26,24 @@ def test_dominant_speaker_empty_turns():
     assert Diarizer.dominant_speaker(0.0, 1.0, [], fallback_nearest=True) is None
 
 
+def test_dominant_speaker_zero_width_inside_turn():
+    turns = _turns((0.0, 5.0, "A"), (6.0, 9.0, "B"))
+    assert Diarizer.dominant_speaker(2.5, 2.5, turns) == "A"
+    assert Diarizer.dominant_speaker(7.0, 7.0, turns) == "B"
+
+
+def test_dominant_speaker_zero_width_in_gap_uses_fallback():
+    turns = _turns((0.0, 1.0, "A"), (10.0, 11.0, "B"))
+    assert Diarizer.dominant_speaker(5.4, 5.4, turns) is None
+    assert Diarizer.dominant_speaker(5.4, 5.4, turns, fallback_nearest=True) == "A"
+    assert Diarizer.dominant_speaker(9.0, 9.0, turns, fallback_nearest=True) == "B"
+
+
+def test_dominant_speaker_rejects_reversed_range():
+    turns = _turns((0.0, 5.0, "A"))
+    assert Diarizer.dominant_speaker(3.0, 2.0, turns, fallback_nearest=True) is None
+
+
 def test_split_words_by_speaker_single_speaker():
     words = [
         {"word": "hello", "start": 0.0, "end": 0.5, "speaker": "A"},

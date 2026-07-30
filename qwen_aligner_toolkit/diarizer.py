@@ -161,13 +161,16 @@ def _dominant_speaker(
     turns: list[SpeakerTurn],
     fallback_nearest: bool = False,
 ) -> str | None:
-    if not turns or end <= start:
+    if not turns or end < start:
         return None
+    is_point = end == start
     overlaps: dict[str, float] = {}
     for t in turns:
         ov = max(0.0, min(end, t.end) - max(start, t.start))
         if ov > 0:
             overlaps[t.speaker] = overlaps.get(t.speaker, 0.0) + ov
+        elif is_point and t.start <= start <= t.end:
+            overlaps.setdefault(t.speaker, 0.0)
     if overlaps:
         return max(overlaps, key=overlaps.get)
     if not fallback_nearest:

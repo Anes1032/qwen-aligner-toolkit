@@ -77,6 +77,21 @@ class VAD:
             min_duration_off=min_duration_off,
         )
 
+    def _speaker_class_count(self) -> int | None:
+        spec = getattr(self._model, "specifications", None)
+        classes = getattr(spec, "classes", None)
+        return len(classes) if classes else None
+
+    def _speech_probability(self, data: np.ndarray) -> np.ndarray:
+        if data.ndim != 2:
+            return data
+        n_speakers = self._speaker_class_count()
+        if n_speakers is not None and data.shape[-1] == n_speakers:
+            return data.max(axis=-1)
+        if data.shape[-1] >= 2:
+            return 1.0 - data[:, 0]
+        return data[:, 0]
+
     def _infer(self, waveform: np.ndarray, sample_rate: int) -> tuple[np.ndarray, np.ndarray]:
         from pyannote.audio import Inference
         with self._lock:
@@ -91,12 +106,7 @@ class VAD:
         data = np.asarray(out.data)
         if data.ndim == 3:
             data = data.reshape(-1, data.shape[-1])
-        if data.ndim == 2 and data.shape[-1] >= 2:
-            speech_prob = 1.0 - data[:, 0]
-        elif data.ndim == 2:
-            speech_prob = data[:, 0]
-        else:
-            speech_prob = data
+        speech_prob = self._speech_probability(data)
         speech_prob = np.ascontiguousarray(np.asarray(speech_prob).ravel(), dtype=np.float32)
         n_frames = len(speech_prob)
         if n_frames == 0:
